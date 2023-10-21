@@ -12,5 +12,9 @@ namespace OurProjects.Data.Models
         public bool Idle { get; set; }
         public string Name { get; set; }
         public DateTime CreatedAt { get; set; }
+        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<Area> Areas { get; set; }
+        public virtual ICollection<Technology> Technologies { get; set; }
     }
 }

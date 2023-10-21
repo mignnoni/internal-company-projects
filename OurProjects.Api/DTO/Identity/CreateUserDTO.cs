@@ -4,6 +4,7 @@
             string Name,
             string Email,
             string Password,
-            string RePassword
+            string RePassword,
+            Guid IdCompany
         );
 }

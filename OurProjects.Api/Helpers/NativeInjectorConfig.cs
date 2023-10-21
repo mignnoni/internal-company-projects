@@ -40,6 +40,8 @@ namespace OurProjects.Api.Helpers
 
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IAreaService, AreaService>();
+            services.AddScoped<ITechnologyService, TechnologyService>();
 
         }
 

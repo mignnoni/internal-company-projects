@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OurProjects.Data.Repository;
 
@@ -10,9 +11,11 @@ using OurProjects.Data.Repository;
 namespace OurProjects.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231021122607_AddIdCompanyToUser")]
+    partial class AddIdCompanyToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,38 +148,6 @@ namespace OurProjects.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("OurProjects.Data.Models.Area", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("createdAt");
-
-                    b.Property<Guid>("IdCompany")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("idCompany");
-
-                    b.Property<bool>("Idle")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("idle");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)")
-                        .HasColumnName("title");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdCompany");
-
-                    b.ToTable("area", (string)null);
-                });
-
             modelBuilder.Entity("OurProjects.Data.Models.Company", b =>
                 {
                     b.Property<Guid>("Id")
@@ -201,154 +172,6 @@ namespace OurProjects.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("company", (string)null);
-                });
-
-            modelBuilder.Entity("OurProjects.Data.Models.Project", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("createdAt");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("description");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("endDate");
-
-                    b.Property<Guid>("IdArea")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("idArea");
-
-                    b.Property<Guid>("IdCompany")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("idCompany");
-
-                    b.Property<Guid>("IdLeader")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("idLeader");
-
-                    b.Property<bool>("Idle")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("idle");
-
-                    b.Property<bool>("Show")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("show");
-
-                    b.Property<bool>("ShowLeader")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("showLeader");
-
-                    b.Property<bool>("ShowTeam")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("showTeam");
-
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("startDate");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("varchar(300)")
-                        .HasColumnName("title");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .IsRequired()
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("updatedAt");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdArea");
-
-                    b.HasIndex("IdCompany");
-
-                    b.HasIndex("IdLeader");
-
-                    b.ToTable("project", (string)null);
-                });
-
-            modelBuilder.Entity("OurProjects.Data.Models.ProjectTeamMember", b =>
-                {
-                    b.Property<Guid>("IdProject")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("idArea");
-
-                    b.Property<Guid>("IdTeamMember")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("idTeamMember");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("id");
-
-                    b.HasKey("IdProject", "IdTeamMember");
-
-                    b.HasIndex("IdTeamMember");
-
-                    b.ToTable("projectTeamMember", (string)null);
-                });
-
-            modelBuilder.Entity("OurProjects.Data.Models.ProjectTechnology", b =>
-                {
-                    b.Property<Guid>("IdProject")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("idProject");
-
-                    b.Property<Guid>("IdTechnology")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("idCompany");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("id");
-
-                    b.HasKey("IdProject", "IdTechnology");
-
-                    b.HasIndex("IdTechnology");
-
-                    b.ToTable("projectTechnology", (string)null);
-                });
-
-            modelBuilder.Entity("OurProjects.Data.Models.Technology", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("createdAt");
-
-                    b.Property<Guid>("IdCompany")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("idCompany");
-
-                    b.Property<bool>("Idle")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("idle");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)")
-                        .HasColumnName("title");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdCompany");
-
-                    b.ToTable("technology", (string)null);
                 });
 
             modelBuilder.Entity("OurProjects.Data.Models.User", b =>
@@ -482,102 +305,6 @@ namespace OurProjects.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OurProjects.Data.Models.Area", b =>
-                {
-                    b.HasOne("OurProjects.Data.Models.Company", "Company")
-                        .WithMany("Areas")
-                        .HasForeignKey("IdCompany")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_area_company");
-
-                    b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("OurProjects.Data.Models.Project", b =>
-                {
-                    b.HasOne("OurProjects.Data.Models.Area", "Area")
-                        .WithMany("Projects")
-                        .HasForeignKey("IdArea")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_project_area");
-
-                    b.HasOne("OurProjects.Data.Models.Company", "Company")
-                        .WithMany("Projects")
-                        .HasForeignKey("IdCompany")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_project_company");
-
-                    b.HasOne("OurProjects.Data.Models.User", "UserLeader")
-                        .WithMany("ProjectsLeader")
-                        .HasForeignKey("IdLeader")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_project_userLeader");
-
-                    b.Navigation("Area");
-
-                    b.Navigation("Company");
-
-                    b.Navigation("UserLeader");
-                });
-
-            modelBuilder.Entity("OurProjects.Data.Models.ProjectTeamMember", b =>
-                {
-                    b.HasOne("OurProjects.Data.Models.Project", "Project")
-                        .WithMany("ProjectTeamMembers")
-                        .HasForeignKey("IdProject")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_projectTeamMember_project");
-
-                    b.HasOne("OurProjects.Data.Models.User", "TeamMember")
-                        .WithMany("ProjectTeamMembers")
-                        .HasForeignKey("IdTeamMember")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_projectTeamMember_user");
-
-                    b.Navigation("Project");
-
-                    b.Navigation("TeamMember");
-                });
-
-            modelBuilder.Entity("OurProjects.Data.Models.ProjectTechnology", b =>
-                {
-                    b.HasOne("OurProjects.Data.Models.Project", "Project")
-                        .WithMany("ProjectTechnologies")
-                        .HasForeignKey("IdProject")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_projectTechnology_project");
-
-                    b.HasOne("OurProjects.Data.Models.Technology", "Technology")
-                        .WithMany("ProjectTechnologies")
-                        .HasForeignKey("IdTechnology")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_projectTechnology_technology");
-
-                    b.Navigation("Project");
-
-                    b.Navigation("Technology");
-                });
-
-            modelBuilder.Entity("OurProjects.Data.Models.Technology", b =>
-                {
-                    b.HasOne("OurProjects.Data.Models.Company", "Company")
-                        .WithMany("Technologies")
-                        .HasForeignKey("IdCompany")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_technology_company");
-
-                    b.Navigation("Company");
-                });
-
             modelBuilder.Entity("OurProjects.Data.Models.User", b =>
                 {
                     b.HasOne("OurProjects.Data.Models.Company", "Company")
@@ -590,39 +317,9 @@ namespace OurProjects.Data.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("OurProjects.Data.Models.Area", b =>
-                {
-                    b.Navigation("Projects");
-                });
-
             modelBuilder.Entity("OurProjects.Data.Models.Company", b =>
                 {
-                    b.Navigation("Areas");
-
-                    b.Navigation("Projects");
-
-                    b.Navigation("Technologies");
-
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("OurProjects.Data.Models.Project", b =>
-                {
-                    b.Navigation("ProjectTeamMembers");
-
-                    b.Navigation("ProjectTechnologies");
-                });
-
-            modelBuilder.Entity("OurProjects.Data.Models.Technology", b =>
-                {
-                    b.Navigation("ProjectTechnologies");
-                });
-
-            modelBuilder.Entity("OurProjects.Data.Models.User", b =>
-                {
-                    b.Navigation("ProjectTeamMembers");
-
-                    b.Navigation("ProjectsLeader");
                 });
 #pragma warning restore 612, 618
         }

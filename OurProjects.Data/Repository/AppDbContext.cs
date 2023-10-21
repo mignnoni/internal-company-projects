@@ -14,13 +14,24 @@ namespace OurProjects.Data.Repository
         }
 
         public DbSet<Company> Company { get; set; }
+        public DbSet<Area> Area { get; set; }
+        public DbSet<Technology> Technology { get; set; }
+        public DbSet<Project> Project { get; set; }
+        public DbSet<ProjectTechnology> ProjectTechnology { get; set; }
+        public DbSet<ProjectTeamMember> ProjectTeamMember { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder
-                .ApplyConfiguration(new CompanyMap());
+                .ApplyConfiguration(new UserMap())
+                .ApplyConfiguration(new CompanyMap())
+                .ApplyConfiguration(new AreaMap())
+                .ApplyConfiguration(new TechnologyMap())
+                .ApplyConfiguration(new ProjectMap())
+                .ApplyConfiguration(new ProjectTechnologyMap())
+                .ApplyConfiguration(new ProjectTeamMemberMap());
         }
     }
 }

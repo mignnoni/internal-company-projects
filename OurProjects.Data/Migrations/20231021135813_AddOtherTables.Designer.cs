@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OurProjects.Data.Repository;
 
@@ -10,9 +11,11 @@ using OurProjects.Data.Repository;
 namespace OurProjects.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231021135813_AddOtherTables")]
+    partial class AddOtherTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -156,10 +159,6 @@ namespace OurProjects.Data.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("createdAt");
 
-                    b.Property<Guid>("IdCompany")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("idCompany");
-
                     b.Property<bool>("Idle")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("idle");
@@ -171,8 +170,6 @@ namespace OurProjects.Data.Migrations
                         .HasColumnName("title");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdCompany");
 
                     b.ToTable("area", (string)null);
                 });
@@ -330,10 +327,6 @@ namespace OurProjects.Data.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("createdAt");
 
-                    b.Property<Guid>("IdCompany")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("idCompany");
-
                     b.Property<bool>("Idle")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("idle");
@@ -345,8 +338,6 @@ namespace OurProjects.Data.Migrations
                         .HasColumnName("title");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdCompany");
 
                     b.ToTable("technology", (string)null);
                 });
@@ -482,18 +473,6 @@ namespace OurProjects.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OurProjects.Data.Models.Area", b =>
-                {
-                    b.HasOne("OurProjects.Data.Models.Company", "Company")
-                        .WithMany("Areas")
-                        .HasForeignKey("IdCompany")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_area_company");
-
-                    b.Navigation("Company");
-                });
-
             modelBuilder.Entity("OurProjects.Data.Models.Project", b =>
                 {
                     b.HasOne("OurProjects.Data.Models.Area", "Area")
@@ -566,18 +545,6 @@ namespace OurProjects.Data.Migrations
                     b.Navigation("Technology");
                 });
 
-            modelBuilder.Entity("OurProjects.Data.Models.Technology", b =>
-                {
-                    b.HasOne("OurProjects.Data.Models.Company", "Company")
-                        .WithMany("Technologies")
-                        .HasForeignKey("IdCompany")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_technology_company");
-
-                    b.Navigation("Company");
-                });
-
             modelBuilder.Entity("OurProjects.Data.Models.User", b =>
                 {
                     b.HasOne("OurProjects.Data.Models.Company", "Company")
@@ -597,11 +564,7 @@ namespace OurProjects.Data.Migrations
 
             modelBuilder.Entity("OurProjects.Data.Models.Company", b =>
                 {
-                    b.Navigation("Areas");
-
                     b.Navigation("Projects");
-
-                    b.Navigation("Technologies");
 
                     b.Navigation("Users");
                 });
