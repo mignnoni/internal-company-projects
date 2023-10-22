@@ -24,7 +24,7 @@ namespace OurProjects.Data.Models.Mapping
             builder.Property(x => x.ShowTeam).HasColumnName("showTeam").IsRequired();
             builder.Property(x => x.ShowLeader).HasColumnName("showLeader").IsRequired();
             builder.Property(x => x.CreatedAt).HasColumnName("createdAt").IsRequired();
-            builder.Property(x => x.UpdatedAt).HasColumnName("updatedAt").IsRequired();
+            builder.Property(x => x.UpdatedAt).HasColumnName("updatedAt");
 
             builder
                 .HasOne(one => one.Company)
