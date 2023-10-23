@@ -5,6 +5,8 @@ using OurProjects.Api.DTO.Identity;
 using OurProjects.Data.Clients;
 using OurProjects.Data.Models;
 using OurProjects.Data.Repository;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace OurProjects.Api.Services.Identity
 {
@@ -27,24 +29,49 @@ namespace OurProjects.Api.Services.Identity
 
         public async Task CreateCompanyAdminUser(CreateUserDTO dto)
         {
-            var identityUser = new User
+            var identityUser = _mapper.Map<User>(dto);
+
+            var result = await _userManager.CreateAsync(identityUser, dto.Password);
+
+            if (!result.Succeeded)
+                throw new ArgumentException(result.Errors.ToString());
+
+            var roles = new List<string>
             {
-                Name = dto.Name,
-                Email = dto.Email,
-                EmailConfirmed = true,
+                Roles.Admin,
+                Roles.Manager,
+                Roles.Member
             };
 
-            await _userManager.CreateAsync(identityUser, dto.Password);
+            result = await _userManager.AddToRolesAsync(identityUser, roles);
+
+            if (!result.Succeeded)
+                throw new ArgumentException(result.Errors.ToString());
+
+            result = await _userManager.AddClaimAsync(identityUser, new Claim(Claims.Company, dto.IdCompany.ToString()));
+
+            if (!result.Succeeded)
+                throw new ArgumentException(result.Errors.ToString());
 
         }
 
-        public async Task CreateUser(CreateUserDTO dto)
+        public async Task CreateMember(CreateUserDTO dto)
         {
             try
             {
                 var identityUser = _mapper.Map<User>(dto);
 
                 var result = await _userManager.CreateAsync(identityUser, dto.Password);
+
+                if (!result.Succeeded)
+                    throw new ArgumentException(result.Errors.ToString());
+
+                result = await _userManager.AddToRoleAsync(identityUser, Roles.Member);
+
+                if (!result.Succeeded)
+                    throw new ArgumentException(result.Errors.ToString());
+
+                result = await _userManager.AddClaimAsync(identityUser, new Claim(Claims.Company, dto.IdCompany.ToString()));
 
                 if (!result.Succeeded)
                     throw new ArgumentException(result.Errors.ToString());
@@ -70,6 +97,7 @@ namespace OurProjects.Api.Services.Identity
         public async Task Login(LoginRequestDTO dto)
         {
             var result = await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, false, false);
+
             if (!result.Succeeded)
                 throw new ArgumentException("Erro ao fazer login");
         }

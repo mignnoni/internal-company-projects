@@ -5,7 +5,7 @@ namespace OurProjects.Api.Services.Identity
 {
     public interface IIdentityService
     {
-        Task CreateUser(CreateUserDTO dto);
+        Task CreateMember(CreateUserDTO dto);
         Task<List<ReadUserDTO>> GetByCompany(Guid idCompany);
     }
 }
