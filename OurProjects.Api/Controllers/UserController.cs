@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OurProjects.Api.DTO;
 using OurProjects.Api.DTO.Identity;
@@ -23,7 +24,7 @@ namespace OurProjects.Api.Controllers
         {
             try
             {
-                await _service.CreateUser(dto);
+                await _service.CreateMember(dto);
             }
             catch (Exception)
             {
@@ -43,5 +44,19 @@ namespace OurProjects.Api.Controllers
                 throw;
             }
         }
+
+        [HttpPost("login")]
+        public async Task<LoginResponseDTO> Login(LoginRequestDTO dto)
+        {
+            try
+            {
+                return await _service.Login(dto);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

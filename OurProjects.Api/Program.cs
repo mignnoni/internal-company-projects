@@ -29,6 +29,7 @@ builder.Services.AddControllers()
                 });
 
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddJWT(builder.Configuration);
 
 var app = builder.Build();
 
@@ -36,6 +37,7 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

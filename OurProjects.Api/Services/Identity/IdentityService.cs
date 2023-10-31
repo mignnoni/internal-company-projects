@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Identity;
 using OurProjects.Api.DTO;
 using OurProjects.Api.DTO.Identity;
+using OurProjects.Api.Services.JWT;
 using OurProjects.Data.Clients;
 using OurProjects.Data.Models;
 using OurProjects.Data.Repository;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace OurProjects.Api.Services.Identity
@@ -15,15 +15,18 @@ namespace OurProjects.Api.Services.Identity
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly UserRep _repo;
+        private readonly IJWTService _jwtService;
 
         public IdentityService(
             SignInManager<User> signInManager,
             UserManager<User> userManager, 
-            IMapper mapper, 
+            IMapper mapper,
+            IJWTService jwtService,
             AppDbContext context) : base(context, mapper)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _jwtService = jwtService;
             _repo = new UserRep(_uow);
         }
 
@@ -71,7 +74,14 @@ namespace OurProjects.Api.Services.Identity
                 if (!result.Succeeded)
                     throw new ArgumentException(result.Errors.ToString());
 
-                result = await _userManager.AddClaimAsync(identityUser, new Claim(Claims.Company, dto.IdCompany.ToString()));
+
+
+                result = await _userManager.AddClaimsAsync(identityUser, new List<Claim>
+                {
+                    new Claim(JwtClaims.IdCompany, dto.IdCompany.ToString()),
+                    new Claim(JwtClaims.Name, dto.Name),
+                    new Claim(JwtClaims.UserId, identityUser.Id.ToString())
+                });
 
                 if (!result.Succeeded)
                     throw new ArgumentException(result.Errors.ToString());
@@ -94,12 +104,32 @@ namespace OurProjects.Api.Services.Identity
             }
         }
 
-        public async Task Login(LoginRequestDTO dto)
+        public async Task<LoginResponseDTO> Login(LoginRequestDTO dto)
         {
-            var result = await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, false, false);
+            try
+            {
+                var result = await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, false, false);
 
-            if (!result.Succeeded)
-                throw new ArgumentException("Erro ao fazer login");
+                if (!result.Succeeded)
+                    throw new ArgumentException("Erro ao fazer login");
+
+
+                var user = await _userManager.FindByEmailAsync(dto.Email);
+
+                if (user is null)
+                    throw new NullReferenceException(nameof(user));
+
+                var claims = await _userManager.GetClaimsAsync(user);
+                var roles = await _userManager.GetRolesAsync(user);
+
+                var token = _jwtService.CreateToken(claims.ToList(), roles.ToList());
+
+                return new LoginResponseDTO(token);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
