@@ -3,7 +3,6 @@
     public sealed record CreateProjectDTO(
             Guid IdArea,
             Guid IdLeader,
-            Guid IdCompany,
             string Title,
             string Description,
             bool Show,

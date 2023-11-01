@@ -6,19 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.RegisterServices(builder.Configuration);
-
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(
-        policy =>
-        {
-            policy
-            .AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-        });
-});
+builder.Services.AddCors();
 
 builder.Services.AddControllers()
                 .AddJsonOptions(configure =>
@@ -31,6 +19,8 @@ builder.Services.AddControllers()
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddJWT(builder.Configuration);
 
+builder.Services.RegisterServices(builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,7 +29,11 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseCors(builder => builder
+    .SetIsOriginAllowed(orign => true)
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials());
 app.MapControllers();
 
 app.Run();

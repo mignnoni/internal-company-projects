@@ -30,9 +30,10 @@ namespace OurProjects.Api.Services.Identity
             _repo = new UserRep(_uow);
         }
 
-        public async Task CreateCompanyAdminUser(CreateUserDTO dto)
+        public async Task CreateCompanyAdminUser(CreateUserDTO dto, Guid idCompany)
         {
             var identityUser = _mapper.Map<User>(dto);
+            identityUser.IdCompany = idCompany;
 
             var result = await _userManager.CreateAsync(identityUser, dto.Password);
 
@@ -51,18 +52,19 @@ namespace OurProjects.Api.Services.Identity
             if (!result.Succeeded)
                 throw new ArgumentException(result.Errors.ToString());
 
-            result = await _userManager.AddClaimAsync(identityUser, new Claim(Claims.Company, dto.IdCompany.ToString()));
+            result = await _userManager.AddClaimAsync(identityUser, new Claim(JwtClaims.IdCompany, idCompany.ToString()));
 
             if (!result.Succeeded)
                 throw new ArgumentException(result.Errors.ToString());
 
         }
 
-        public async Task CreateMember(CreateUserDTO dto)
+        public async Task CreateMember(CreateUserDTO dto, Guid idCompany)
         {
             try
             {
                 var identityUser = _mapper.Map<User>(dto);
+                identityUser.IdCompany = idCompany;
 
                 var result = await _userManager.CreateAsync(identityUser, dto.Password);
 
@@ -78,7 +80,7 @@ namespace OurProjects.Api.Services.Identity
 
                 result = await _userManager.AddClaimsAsync(identityUser, new List<Claim>
                 {
-                    new Claim(JwtClaims.IdCompany, dto.IdCompany.ToString()),
+                    new Claim(JwtClaims.IdCompany, idCompany.ToString()),
                     new Claim(JwtClaims.Name, dto.Name),
                     new Claim(JwtClaims.UserId, identityUser.Id.ToString())
                 });

@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OurProjects.Api.DTO;
+using OurProjects.Api.Helpers;
 using OurProjects.Api.Services;
+using OurProjects.Api.Services.Identity;
 
 namespace OurProjects.Api.Controllers
 {
-    [AllowAnonymous]
+    [Authorize(Roles = Roles.Manager)]
     [ApiController]
     [Route("[controller]")]
     public class ProjectController : ControllerBase
@@ -18,11 +20,11 @@ namespace OurProjects.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<List<ReadProjectDTO>> GetAll(Guid idCompany)
+        public async Task<List<ReadProjectDTO>> GetAll()
         {
             try
             {
-                return await _service.GetAll(idCompany);
+                return await _service.GetAll(User.GetCompanyId());
             }
             catch (Exception)
             {
@@ -35,7 +37,7 @@ namespace OurProjects.Api.Controllers
         {
             try
             {
-                await _service.Insert(dto);
+                await _service.Insert(dto, User.GetCompanyId());
             }
             catch (Exception)
             {

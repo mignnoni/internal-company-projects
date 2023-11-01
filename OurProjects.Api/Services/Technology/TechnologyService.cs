@@ -14,11 +14,14 @@ namespace OurProjects.Api.Services
             _repo = new TechnologyRep(_uow);
         }
 
-        public async Task Insert(CreateTechnologyDTO dto)
+        public async Task Insert(CreateTechnologyDTO dto, Guid idCompany)
         {
             try
             {
-                _repo.Insert(_mapper.Map<Technology>(dto));
+                var model = _mapper.Map<Technology>(dto);
+                model.IdCompany = idCompany;
+
+                _repo.Insert(model);
 
                 await _uow.SaveAsync();
             }

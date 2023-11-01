@@ -14,11 +14,12 @@ namespace OurProjects.Api.Services
             _repo = new ProjectRep(_uow);
         }
 
-        public async Task Insert(CreateProjectDTO dto)
+        public async Task Insert(CreateProjectDTO dto, Guid idCompany)
         {
             try
             {
                 var model = _mapper.Map<Project>(dto);
+                model.IdCompany = idCompany;
 
                 _repo.Insert(model);
                 await _uow.SaveAsync();

@@ -16,12 +16,12 @@ namespace OurProjects.Api.Services.JWT
         public string CreateToken(List<Claim> claims, List<string> roles)
         {
             var token = new JwtSecurityToken(
-                    _jwtOptions.TokenValidationParameters.ValidIssuer,
-                    _jwtOptions.TokenValidationParameters.ValidAudience,
-                    GetClaims(claims, roles),
-                    DateTime.UtcNow,
-                    DateTime.UtcNow.AddSeconds(_jwtOptions.TokenExpiration),
-                    _jwtOptions.SigningCredentials
+                    issuer: _jwtOptions.Issuer,
+                    audience: _jwtOptions.Audience,
+                    claims: GetClaims(claims, roles),
+                    notBefore: DateTime.UtcNow,
+                    expires: DateTime.UtcNow.AddSeconds(_jwtOptions.TokenExpiration),
+                    signingCredentials: _jwtOptions.SigningCredentials
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(token);

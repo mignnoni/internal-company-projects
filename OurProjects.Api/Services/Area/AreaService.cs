@@ -14,11 +14,14 @@ namespace OurProjects.Api.Services
             _repo = new AreaRep(_uow);
         }
 
-        public async Task Insert(CreateAreaDTO dto)
+        public async Task Insert(CreateAreaDTO dto, Guid idCompany)
         {
             try
             {
-                _repo.Insert(_mapper.Map<Area>(dto));
+                var model = _mapper.Map<Area>(dto);
+                model.IdCompany = idCompany;
+
+                _repo.Insert(model);
 
                 await _uow.SaveAsync();
             }

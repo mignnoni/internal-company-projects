@@ -15,13 +15,14 @@ namespace OurProjects.Api.Helpers
 
             var tokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateLifetime = true,
+                ValidateIssuer = true,
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = jwtConf.Issuer,
                 ValidAudience = jwtConf.Audience,
                 IssuerSigningKey = securityKey,
+                RequireExpirationTime = true,
                 ClockSkew = TimeSpan.Zero
             };
 
@@ -29,7 +30,8 @@ namespace OurProjects.Api.Helpers
             {
                 options.SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
                 options.TokenExpiration = jwtConf?.TokenExpiration ?? 0;
-                options.TokenValidationParameters = tokenValidationParameters;
+                options.Issuer = jwtConf?.Issuer ?? "";
+                options.Audience = jwtConf?.Audience ?? "";
             });
 
             services.AddAuthentication(options =>
@@ -42,14 +44,6 @@ namespace OurProjects.Api.Helpers
                 options.TokenValidationParameters = tokenValidationParameters;
                 options.IncludeErrorDetails = true;
                 options.RequireHttpsMetadata = true;
-                options.SaveToken = true;
-            });
-
-            services.AddAuthorization(auth =>
-            {
-                auth.AddPolicy(JwtBearerDefaults.AuthenticationScheme, new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser()
-                    .Build());
             });
         }
     }

@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using OurProjects.Api.DTO;
 using OurProjects.Api.Services;
+using OurProjects.Api.Services.Identity;
 using OurProjects.Data.Models;
 
 namespace OurProjects.Api.Controllers
 {
-    [AllowAnonymous]
+    [Authorize(Roles = Roles.Dev)]
     [ApiController]
     [Route("[controller]")]
     public class CompanyController : ControllerBase

@@ -5,7 +5,7 @@ namespace OurProjects.Api.Services
 {
     public interface IAreaService
     {
-        Task Insert(CreateAreaDTO dto);
+        Task Insert(CreateAreaDTO dto, Guid idCompany);
         Task<List<ReadAreaDTO>> GetAll(Guid idCompany);
     }
 }

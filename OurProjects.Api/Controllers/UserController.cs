@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OurProjects.Api.DTO;
 using OurProjects.Api.DTO.Identity;
+using OurProjects.Api.Helpers;
 using OurProjects.Api.Services.Identity;
 
 namespace OurProjects.Api.Controllers
 {
-    [AllowAnonymous]
+    [Authorize(Roles = Roles.Admin)]
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
@@ -24,7 +24,7 @@ namespace OurProjects.Api.Controllers
         {
             try
             {
-                await _service.CreateMember(dto);
+                await _service.CreateMember(dto, User.GetCompanyId());
             }
             catch (Exception)
             {
@@ -33,24 +33,11 @@ namespace OurProjects.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<List<ReadUserDTO>> Get(Guid idCompany)
+        public async Task<List<ReadUserDTO>> Get()
         {
             try
             {
-                return await _service.GetByCompany(idCompany);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        [HttpPost("login")]
-        public async Task<LoginResponseDTO> Login(LoginRequestDTO dto)
-        {
-            try
-            {
-                return await _service.Login(dto);
+                return await _service.GetByCompany(User.GetCompanyId());
             }
             catch (Exception)
             {
