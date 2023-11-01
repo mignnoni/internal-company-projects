@@ -11,9 +11,8 @@ namespace OurProjects.Api.Helpers
 
             if (!string.IsNullOrEmpty(user))
             {
-                _ = Guid.TryParse(user, out Guid idCompany);
-
-                return idCompany;
+                if (Guid.TryParse(user, out Guid idCompany))
+                    return idCompany;
             }
 
             return Guid.Empty;
