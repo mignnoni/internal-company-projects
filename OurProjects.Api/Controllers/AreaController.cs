@@ -32,12 +32,51 @@ namespace OurProjects.Api.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public async Task<ReadAreaDTO> GetById(Guid id)
+        {
+            try
+            {
+                return await _service.GetById(id, User.GetCompanyId());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         [HttpPost]
         public async Task Insert(CreateAreaDTO dto)
         {
             try
             {
                 await _service.Insert(dto, User.GetCompanyId());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPatch("title")]
+        public async Task UpdateTitle(UpdatereaDTO dto)
+        {
+            try
+            {
+                await _service.UpdateTitle(dto, User.GetCompanyId());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        public async Task Delete(Guid id)
+        {
+            try
+            {
+                await _service.Delete(id, User.GetCompanyId());
             }
             catch (Exception)
             {

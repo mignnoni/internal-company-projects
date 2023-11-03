@@ -1,5 +1,4 @@
 ﻿using OurProjects.Api.DTO;
-using OurProjects.Data.Models;
 
 namespace OurProjects.Api.Services
 {
@@ -7,5 +6,8 @@ namespace OurProjects.Api.Services
     {
         Task Insert(CreateAreaDTO dto, Guid idCompany);
         Task<List<ReadAreaDTO>> GetAll(Guid idCompany);
+        Task<ReadAreaDTO> GetById(Guid id, Guid idCompany);
+        Task UpdateTitle(UpdatereaDTO dto, Guid idCompany);
+        Task Delete(Guid id, Guid idCompany);
     }
 }

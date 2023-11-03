@@ -31,11 +31,63 @@ namespace OurProjects.Api.Services
             }
         }
 
+        public async Task UpdateTitle(UpdatereaDTO dto, Guid idCompany)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(dto.Title))
+                    throw new ArgumentNullException(nameof(dto.Title));
+
+                var oldArea = await _repo.GetById(dto.Id, idCompany);
+
+                if (oldArea is null)
+                    throw new ArgumentNullException(nameof(oldArea));
+
+                var title = dto.Title.Trim();
+
+                if (oldArea.Title == title)
+                    throw new ArgumentException("O título precisa ser diferente do atual para ser atualizado");
+
+                await _repo.UpdateTitle(dto.Id, idCompany, title);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<List<ReadAreaDTO>> GetAll(Guid idCompany)
         {
             try
             {
                 return _mapper.Map<List<ReadAreaDTO>>(await _repo.GetAll(idCompany));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<ReadAreaDTO> GetById(Guid id, Guid idCompany)
+        {
+            try
+            {
+                return _mapper.Map<ReadAreaDTO>(await _repo.GetById(id, idCompany));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task Delete(Guid id, Guid idCompany)
+        {
+            try
+            {
+                if (!await _repo.Exists(id, idCompany))
+                    throw new ArgumentException("Área não encontrada");
+
+                await _repo.Inactivate(id, idCompany);
             }
             catch (Exception)
             {
