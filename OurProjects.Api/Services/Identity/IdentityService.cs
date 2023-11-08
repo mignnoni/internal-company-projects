@@ -19,7 +19,7 @@ namespace OurProjects.Api.Services.Identity
 
         public IdentityService(
             SignInManager<User> signInManager,
-            UserManager<User> userManager, 
+            UserManager<User> userManager,
             IMapper mapper,
             IJWTService jwtService,
             AppDbContext context) : base(context, mapper)
@@ -30,36 +30,55 @@ namespace OurProjects.Api.Services.Identity
             _repo = new UserRep(_uow);
         }
 
-        public async Task CreateCompanyAdminUser(CreateUserDTO dto, Guid idCompany)
+        public async Task CreateAdmin(CreateUserDTO dto, Guid idCompany)
         {
-            var identityUser = _mapper.Map<User>(dto);
-            identityUser.IdCompany = idCompany;
-
-            var result = await _userManager.CreateAsync(identityUser, dto.Password);
-
-            if (!result.Succeeded)
-                throw new ArgumentException(result.Errors.ToString());
+            var user = await CreateUser(dto, idCompany);
 
             var roles = new List<string>
             {
+                Roles.Dev,
                 Roles.Admin,
                 Roles.Manager,
                 Roles.Member
             };
 
-            result = await _userManager.AddToRolesAsync(identityUser, roles);
+            await AddToRoles(user, roles);
 
-            if (!result.Succeeded)
-                throw new ArgumentException(result.Errors.ToString());
+            await AddClaims(user);
+        }
 
-            result = await _userManager.AddClaimAsync(identityUser, new Claim(JwtClaims.IdCompany, idCompany.ToString()));
+        public async Task CreateManager(CreateUserDTO dto, Guid idCompany)
+        {
+            var user = await CreateUser(dto, idCompany);
 
-            if (!result.Succeeded)
-                throw new ArgumentException(result.Errors.ToString());
+            var roles = new List<string>
+            {
+                Roles.Manager,
+                Roles.Member
+            };
 
+            await AddToRoles(user, roles);
+
+            await AddClaims(user);
         }
 
         public async Task CreateMember(CreateUserDTO dto, Guid idCompany)
+        {
+            try
+            {
+                var user = await CreateUser(dto, idCompany);
+
+                await AddToRoles(user, new List<string>() { Roles.Member });
+
+                await AddClaims(user);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private async Task<User> CreateUser(CreateUserDTO dto, Guid idCompany)
         {
             try
             {
@@ -71,27 +90,33 @@ namespace OurProjects.Api.Services.Identity
                 if (!result.Succeeded)
                     throw new ArgumentException(result.Errors.ToString());
 
-                result = await _userManager.AddToRoleAsync(identityUser, Roles.Member);
-
-                if (!result.Succeeded)
-                    throw new ArgumentException(result.Errors.ToString());
-
-
-
-                result = await _userManager.AddClaimsAsync(identityUser, new List<Claim>
-                {
-                    new Claim(JwtClaims.IdCompany, idCompany.ToString()),
-                    new Claim(JwtClaims.Name, dto.Name),
-                    new Claim(JwtClaims.UserId, identityUser.Id.ToString())
-                });
-
-                if (!result.Succeeded)
-                    throw new ArgumentException(result.Errors.ToString());
+                return identityUser;
             }
             catch (Exception)
             {
                 throw;
             }
+        }
+
+        private async Task AddToRoles(User user, IEnumerable<string> roles)
+        {
+            var result = await _userManager.AddToRolesAsync(user, roles);
+
+            if (!result.Succeeded)
+                throw new ArgumentException(result.Errors.ToString());
+        }
+
+        private async Task AddClaims(User user)
+        {
+            var result = await _userManager.AddClaimsAsync(user, new List<Claim>
+                {
+                    new Claim(JwtClaims.IdCompany, user.IdCompany.ToString()),
+                    new Claim(JwtClaims.Name, user.Name),
+                    new Claim(JwtClaims.UserId, user.Id.ToString())
+                });
+
+            if (!result.Succeeded)
+                throw new ArgumentException(result.Errors.ToString());
         }
 
         public async Task<List<ReadUserDTO>> GetByCompany(Guid idCompany)

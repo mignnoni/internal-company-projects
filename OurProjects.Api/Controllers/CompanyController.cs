@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OurProjects.Api.DTO;
 using OurProjects.Api.Services;
-using OurProjects.Api.Services.Identity;
+using OurProjects.Api.Services.JWT;
 using OurProjects.Data.Models;
 
 namespace OurProjects.Api.Controllers

@@ -17,7 +17,7 @@ namespace OurProjects.Data.Clients
         public Task<Technology?> GetById(Guid id, Guid idCompany)
         {
             return _repo.Query
-                    .FirstOrDefaultAsync(x => x.Id == id && x.IdCompany == idCompany);
+                    .FirstOrDefaultAsync(x => x.Id == id && x.IdCompany == idCompany && !x.Idle);
         }
 
         public Task<List<Technology>> GetAll(Guid idCompany)
@@ -48,6 +48,12 @@ namespace OurProjects.Data.Clients
                 .ExecuteUpdateAsync(u =>
                     u.SetProperty(p =>
                         p.Idle, true));
+        }
+
+        public Task<bool> Exists(Guid id, Guid idCompany)
+        {
+            return _repo.Query
+                .AnyAsync(x => x.Id == id && x.IdCompany == idCompany && !x.Idle);
         }
 
 

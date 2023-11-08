@@ -31,6 +31,18 @@ namespace OurProjects.Api.Services
             }
         }
 
+        public async Task<List<ReadAreaDTO>> GetAll(Guid idCompany)
+        {
+            try
+            {
+                return _mapper.Map<List<ReadAreaDTO>>(await _repo.GetAll(idCompany));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task UpdateTitle(UpdatereaDTO dto, Guid idCompany)
         {
             try
@@ -49,18 +61,6 @@ namespace OurProjects.Api.Services
                     throw new ArgumentException("O título precisa ser diferente do atual para ser atualizado");
 
                 await _repo.UpdateTitle(dto.Id, idCompany, title);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<List<ReadAreaDTO>> GetAll(Guid idCompany)
-        {
-            try
-            {
-                return _mapper.Map<List<ReadAreaDTO>>(await _repo.GetAll(idCompany));
             }
             catch (Exception)
             {

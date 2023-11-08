@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OurProjects.Api.DTO;
 using OurProjects.Api.Helpers;
 using OurProjects.Api.Services;
-using OurProjects.Api.Services.Identity;
+using OurProjects.Api.Services.JWT;
 
 namespace OurProjects.Api.Controllers
 {

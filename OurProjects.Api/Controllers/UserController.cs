@@ -4,10 +4,10 @@ using OurProjects.Api.DTO;
 using OurProjects.Api.DTO.Identity;
 using OurProjects.Api.Helpers;
 using OurProjects.Api.Services.Identity;
+using OurProjects.Api.Services.JWT;
 
 namespace OurProjects.Api.Controllers
 {
-    [Authorize(Roles = Roles.Admin)]
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
@@ -19,8 +19,10 @@ namespace OurProjects.Api.Controllers
             _service = service;
         }
 
-        [HttpPost]
-        public async Task Insert(CreateUserDTO dto)
+
+        [Authorize(Roles = Roles.Manager)]
+        [HttpPost("member")]
+        public async Task InsertMember(CreateUserDTO dto)
         {
             try
             {
@@ -32,6 +34,35 @@ namespace OurProjects.Api.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.Admin)]
+        [HttpPost("manager")]
+        public async Task InsertManager(CreateUserDTO dto)
+        {
+            try
+            {
+                await _service.CreateManager(dto, User.GetCompanyId());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [Authorize(Roles = Roles.Dev)]
+        [HttpPost("admin")]
+        public async Task InsertAdmin([FromQuery] Guid idCompany, [FromBody] CreateUserDTO dto)
+        {
+            try
+            {
+                await _service.CreateAdmin(dto, idCompany);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet]
         public async Task<List<ReadUserDTO>> Get()
         {

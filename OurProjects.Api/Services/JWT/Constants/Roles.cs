@@ -1,4 +1,4 @@
-﻿namespace OurProjects.Api.Services.Identity
+﻿namespace OurProjects.Api.Services.JWT
 {
     internal static class Roles
     {

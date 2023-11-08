@@ -42,5 +42,57 @@ namespace OurProjects.Api.Services
                 throw;
             }
         }
+
+        public async Task UpdateTitle(UpdateTechnologyDTO dto, Guid idCompany)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(dto.Title))
+                    throw new ArgumentNullException(nameof(dto.Title));
+
+                var oldArea = await _repo.GetById(dto.Id, idCompany);
+
+                if (oldArea is null)
+                    throw new ArgumentNullException(nameof(oldArea));
+
+                var title = dto.Title.Trim();
+
+                if (oldArea.Title == title)
+                    throw new ArgumentException("O título precisa ser diferente do atual para ser atualizado");
+
+                await _repo.UpdateTitle(dto.Id, idCompany, title);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<ReadTechnologyDTO> GetById(Guid id, Guid idCompany)
+        {
+            try
+            {
+                return _mapper.Map<ReadTechnologyDTO>(await _repo.GetById(id, idCompany));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task Delete(Guid id, Guid idCompany)
+        {
+            try
+            {
+                if (!await _repo.Exists(id, idCompany))
+                    throw new ArgumentException("Tecnologia não encontrada");
+
+                await _repo.Inactivate(id, idCompany);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
