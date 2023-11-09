@@ -64,12 +64,42 @@ namespace OurProjects.Api.Services
             }
         }
 
+        public async Task Update(UpdateProjectDTO dto, Guid idCompany)
+        {
+            try
+            {
+                if (!await _repo.Exists(dto.Id, idCompany))
+                    throw new ArgumentException("Projeto não encontrado");
+
+                _repo.Update(_mapper.Map<Project>(dto));
+
+                await _uow.SaveAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<List<ReadProjectDTO>> GetAll(Guid idCompany)
         {
             try
             {
                 var projects = await _repo.GetAll(idCompany);
                 return _mapper.Map<List<ReadProjectDTO>>(projects);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<ReadProjectDTO> GetById(Guid id, Guid idCompany)
+        {
+            try
+            {
+                var project = await _repo.GetById(id, idCompany);
+                return _mapper.Map<ReadProjectDTO>(project);
             }
             catch (Exception)
             {

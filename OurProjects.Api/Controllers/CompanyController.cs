@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OurProjects.Api.DTO;
 using OurProjects.Api.Services;
@@ -7,9 +8,10 @@ using OurProjects.Data.Models;
 
 namespace OurProjects.Api.Controllers
 {
-    [Authorize(Roles = Roles.Dev)]
     [ApiController]
     [Route("[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Roles = Roles.Dev)]
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService _service;

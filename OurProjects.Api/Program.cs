@@ -8,6 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors();
 
+builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddJWT(builder.Configuration);
+
+builder.Services.RegisterServices(builder.Configuration);
+
 builder.Services.AddControllers()
                 .AddJsonOptions(configure =>
                 {
@@ -15,11 +21,6 @@ builder.Services.AddControllers()
                     configure.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
                     configure.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 });
-
-builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddJWT(builder.Configuration);
-
-builder.Services.RegisterServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -29,11 +30,13 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseCors(builder => builder
     .SetIsOriginAllowed(orign => true)
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials());
+
 app.MapControllers();
 
 app.Run();

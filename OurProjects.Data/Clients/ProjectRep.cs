@@ -25,6 +25,12 @@ namespace OurProjects.Data.Clients
                     .FirstOrDefaultAsync(x => x.Id == id && x.IdCompany == idCompany);
         }
 
+        public Task<bool> Exists(Guid id, Guid idCompany)
+        {
+            return _repo.Query
+                .AnyAsync(x => x.Id == id && x.IdCompany == idCompany);
+        }
+
         public Task<List<Project>> GetAll(Guid idCompany)
         {
             return _repo.Query
@@ -57,6 +63,11 @@ namespace OurProjects.Data.Clients
         public void Insert(Project model)
         {
             _repo.Add(model);
+        }
+
+        public void Update (Project model)
+        {
+            _repo.Update(model);
         }
 
         public Task Inactivate(Guid id, Guid idCompany)

@@ -12,11 +12,6 @@ namespace OurProjects.Api.Services.JWT
             }
         }
 
-        public static void AddIat(this List<Claim> claims)
-        {
-            claims.Add(new Claim(JwtClaims.Iat, DateTime.UtcNow.ToString()));
-        }
-
         public static void AddJti(this List<Claim> claims)
         {
             claims.Add(new Claim(JwtClaims.Jti, Guid.NewGuid().ToString()));

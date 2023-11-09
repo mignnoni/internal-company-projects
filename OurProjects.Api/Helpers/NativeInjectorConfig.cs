@@ -11,7 +11,7 @@ namespace OurProjects.Api.Helpers
     public static class NativeInjectorConfig
     {
 
-        public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("ProjectsDb");
 
@@ -38,6 +38,8 @@ namespace OurProjects.Api.Helpers
             services.AddScoped<ITechnologyService, TechnologyService>();
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<IJWTService, JWTService>();
+
+            return services;
 
         }
 

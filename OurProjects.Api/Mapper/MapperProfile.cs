@@ -29,11 +29,14 @@ namespace OurProjects.Api.Mapper
             CreateMap<Project, ReadProjectDTO>();
             CreateMap<CreateProjectDTO, Project>()
                 .ForMember(dest => dest.CreatedAt, o => o.MapFrom(_ => DateTime.UtcNow));
+            CreateMap<UpdateProjectDTO, Project>()
+                .ForMember(dest => dest.UpdatedAt, o => o.MapFrom(_ => DateTime.UtcNow));
 
             CreateMap<ProjectTeamMember, ReadProjectTeamMemberDTO>();
+            CreateMap<UpdateProjectTeamMemberDTO, ProjectTeamMember>();
 
             CreateMap<ProjectTechnology, ReadProjectTechnologyDTO>();
-
+            CreateMap<UpdateProjectTechnologyDTO, ProjectTechnology>();
 
 
         }

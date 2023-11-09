@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OurProjects.Api.DTO;
 using OurProjects.Api.Helpers;
@@ -7,9 +8,10 @@ using OurProjects.Api.Services.JWT;
 
 namespace OurProjects.Api.Controllers
 {
-    [Authorize(Roles = Roles.Manager)]
     [ApiController]
     [Route("[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Roles = Roles.Manager)]
     public class ProjectController : ControllerBase
     {
         private readonly IProjectService _service;
@@ -32,12 +34,38 @@ namespace OurProjects.Api.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public async Task<ReadProjectDTO> GetById(Guid id)
+        {
+            try
+            {
+                return await _service.GetById(id, User.GetCompanyId());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         [HttpPost]
         public async Task Insert(CreateProjectDTO dto)
         {
             try
             {
                 await _service.Insert(dto, User.GetCompanyId());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPut]
+        public async Task Update(UpdateProjectDTO dto)
+        {
+            try
+            {
+                await _service.Update(dto, User.GetCompanyId());
             }
             catch (Exception)
             {

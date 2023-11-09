@@ -27,8 +27,4 @@
     <ProjectReference Include="..\OurProjects.Data\OurProjects.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Identity\Constants\" />
-  </ItemGroup>
-
 </Project>

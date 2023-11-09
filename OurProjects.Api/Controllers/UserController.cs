@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OurProjects.Api.DTO;
 using OurProjects.Api.DTO.Identity;
@@ -10,6 +11,8 @@ namespace OurProjects.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Roles = Roles.Admin)]
     public class UserController : ControllerBase
     {
         private readonly IIdentityService _service;
@@ -20,7 +23,6 @@ namespace OurProjects.Api.Controllers
         }
 
 
-        [Authorize(Roles = Roles.Manager)]
         [HttpPost("member")]
         public async Task InsertMember(CreateUserDTO dto)
         {
@@ -34,7 +36,6 @@ namespace OurProjects.Api.Controllers
             }
         }
 
-        [Authorize(Roles = Roles.Admin)]
         [HttpPost("manager")]
         public async Task InsertManager(CreateUserDTO dto)
         {
@@ -62,7 +63,6 @@ namespace OurProjects.Api.Controllers
             }
         }
 
-        [Authorize(Roles = Roles.Admin)]
         [HttpGet]
         public async Task<List<ReadUserDTO>> Get()
         {

@@ -30,7 +30,6 @@ namespace OurProjects.Api.Services.JWT
         private static List<Claim> GetClaims(List<Claim> claims, List<string> roles)
         {
             claims.AddJti();
-            claims.AddIat();
             claims.AddRoles(roles);
 
             return claims;

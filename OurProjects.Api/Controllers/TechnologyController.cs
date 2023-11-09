@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OurProjects.Api.DTO;
 using OurProjects.Api.Helpers;
@@ -7,9 +8,10 @@ using OurProjects.Api.Services.JWT;
 
 namespace OurProjects.Api.Controllers
 {
-    [Authorize(Roles = Roles.Manager)]
     [ApiController]
     [Route("[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Roles = Roles.Manager)]
     public class TechnologyController : ControllerBase
     {
         private readonly ITechnologyService _service;

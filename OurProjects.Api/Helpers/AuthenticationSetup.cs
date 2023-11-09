@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using OurProjects.Api.Services.JWT;
 using System.Text;
@@ -8,10 +7,10 @@ namespace OurProjects.Api.Helpers
 {
     public static class AuthenticationSetup
     {
-        public static void AddJWT(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddJWT(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtConf = configuration.GetSection(nameof(JwtConf)).Get<JwtConf>();
-            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConf.SecurityKey));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConf.SecurityKey));
 
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -22,7 +21,6 @@ namespace OurProjects.Api.Helpers
                 ValidIssuer = jwtConf.Issuer,
                 ValidAudience = jwtConf.Audience,
                 IssuerSigningKey = securityKey,
-                RequireExpirationTime = true,
                 ClockSkew = TimeSpan.Zero
             };
 
@@ -38,13 +36,17 @@ namespace OurProjects.Api.Helpers
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 
-            }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            }).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = tokenValidationParameters;
                 options.IncludeErrorDetails = true;
                 options.RequireHttpsMetadata = true;
+                options.SaveToken = true;
             });
+
+            return services;
         }
     }
 }
