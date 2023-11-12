@@ -21,6 +21,7 @@ namespace OurProjects.Api.Controllers
             _service = service;
         }
 
+        [ResponseCache(Duration = 15)]
         [HttpGet]
         public async Task<List<ReadAreaDTO>> GetAll()
         {
