@@ -6,7 +6,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
+});
 
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -26,16 +36,18 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
+app.UseCors();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseCors(builder => builder
-    .SetIsOriginAllowed(orign => true)
-    .AllowAnyMethod()
-    .AllowAnyHeader()
-    .AllowCredentials());
+//app.UseCors(builder => builder
+//    .SetIsOriginAllowed(orign => true)
+//    .AllowAnyMethod()
+//    .AllowAnyHeader()
+//    .AllowCredentials());
 
 app.MapControllers();
 
